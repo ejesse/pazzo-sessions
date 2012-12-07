@@ -6,7 +6,7 @@ import OpenSSL
 from datetime import datetime, timedelta
 from addvocate_auth.utils import constant_time_compare, salted_hmac, get_utc_now_with_timezone
 from addvocate_auth.exceptions import SuspiciousOperation, AddvocateAuthException
-
+from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 try:
     import cPickle as pickle
 except ImportError:
@@ -26,20 +26,23 @@ class SimpleSession(object):
         self.session_data = None
         self.expire_date = None
 
-class SessionBase(object):
+class Session(object):
     """
     Base class for all Session classes.
     """
     TEST_COOKIE_NAME = 'testcookie'
     TEST_COOKIE_VALUE = 'worked'
 
-    def __init__(self, session_key=None, settings=None):
+    def __init__(self, session_key=None):
         self._session_key = session_key
         self.accessed = False
         self.modified = False
-        if settings is None:
-            raise AddvocateAuthException("Sessions require a settings dictionary")
-        self.settings = settings
+        registry = StoreRegistry()
+        if registry.initialized:
+            self.settings = registry.settings
+            self.session_engine = registry.get_session_store()
+        else:
+            raise AddvocateAuthException("Session StoreRegistry is uninitialized")
 
     def __contains__(self, key):
         return key in self._session
@@ -249,7 +252,7 @@ class SessionBase(object):
         """
         Returns True if the given session_key already exists.
         """
-        raise NotImplementedError
+        return self.session_engine.exists(session_key)
 
     def create(self):
         """
@@ -257,7 +260,7 @@ class SessionBase(object):
         a unique key and will have saved the result once (with empty data)
         before the method returns.
         """
-        raise NotImplementedError
+        return self.session_engine.create(self)
 
     def save(self, must_create=False):
         """
@@ -265,17 +268,22 @@ class SessionBase(object):
         is created (otherwise a CreateError exception is raised). Otherwise,
         save() can update an existing object with the same key.
         """
-        raise NotImplementedError
+        self.session_engine.save(self, must_create)
 
     def delete(self, session_key=None):
         """
         Deletes the session data under this key. If the key is None, the
         current session key value is used.
         """
-        raise NotImplementedError
+        if session_key is None:
+            if self.session_key is None:
+                return
+            session_key = self.session_key
+
+        self.session_engine.delete(session_key)
 
     def load(self):
         """
         Loads the session data and returns a dictionary.
         """
-        raise NotImplementedError
+        return self.session_engine.load(self)

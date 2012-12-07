@@ -1,14 +1,22 @@
 from django.conf import settings
-from addvocate_auth.sessions.base import SessionBase
+from addvocate_auth.sessions.base import Session
 from importlib import import_module
+from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 
-class SessionStore(object):
+class SessionStore(Session):
+    
     """
     Gets the addvocate session store from the settings and
     then impersonates a Django store
     """
     
-    def __new__(self, *args, **kwargs):
-        addvocate_session_store = import_module(settings.ADDVOCATE_SESSION_STORE)
-        kwargs['settings'] = settings
-        return addvocate_session_store.Session(self, settings=settings)
+    def __init__(self, session_key=None):
+        """ Sneakily set the settings from the Django settings
+        so we can fool Django into initializing the registry
+        and still behave like both an addvocate session
+        and a Django SessionStore 
+        """
+        registry = StoreRegistry()
+        if not registry.initialized:
+            StoreRegistry(settings=settings)
+        super(SessionStore, self ).__init__(session_key=session_key)
