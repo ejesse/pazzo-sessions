@@ -1,9 +1,9 @@
 from django.conf import settings
-from addvocate_auth.sessions.base import Session
+from addvocate_auth.sessions.base import BaseSession
 from importlib import import_module
 from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 
-class SessionStore(Session):
+class SessionStore(BaseSession):
     
     """
     Gets the addvocate session store from the settings and

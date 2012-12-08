@@ -41,16 +41,23 @@ class RedisSessionEngine(object):
         r = RedisStore(settings=self.settings).get_redis_session_connection()
         raw = r.get(session.session_key)
         if raw is None:
+            print 'raw was none'
             session.create()
             return {}
         d = pickle.loads(raw)
         expire_date = d.get('expire_date',datetime.datetime(1980,1,1))
         if expire_date <  get_utc_now_with_timezone():
+            print 'expiry date is borked'
             session.create()
             return {}
         try:
-            return session.decode(d.get('session_data'))
+            print 'raw is being decoded'
+            print session.session_key
+            decoded = session.decode(d.get('session_data'))
+            print decoded
+            return decoded
         except SuspiciousOperation:
+            'print his suspicious op'
             session.create()
             return {}
 

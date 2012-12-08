@@ -26,7 +26,7 @@ class SimpleSession(object):
         self.session_data = None
         self.expire_date = None
 
-class Session(object):
+class BaseSession(object):
     """
     Base class for all Session classes.
     """
@@ -43,6 +43,7 @@ class Session(object):
             self.session_engine = registry.get_session_store()
         else:
             raise AddvocateAuthException("Session StoreRegistry is uninitialized")
+        self._get_session()
 
     def __contains__(self, key):
         return key in self._session
@@ -269,6 +270,8 @@ class Session(object):
         save() can update an existing object with the same key.
         """
         self.session_engine.save(self, must_create)
+        registry = StoreRegistry()
+        registry.sessions[self.session_key] = self
 
     def delete(self, session_key=None):
         """

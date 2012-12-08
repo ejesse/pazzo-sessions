@@ -8,7 +8,8 @@ class StoreRegistry(object):
     __shared_state = dict(
         session_engine=None,
         settings = None,
-        initialized=False
+        initialized=False,
+        sessions={}
     )
     
     def __init__(self, settings=None):
