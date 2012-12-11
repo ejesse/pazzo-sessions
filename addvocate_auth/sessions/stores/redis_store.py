@@ -1,14 +1,14 @@
-from addvocate_auth.exceptions import SuspiciousOperation,\
+from addvocate_auth.exceptions import SuspiciousOperation, \
     AddvocateAuthException
 from addvocate_auth.sessions.base import CreateError, SimpleSession
 from addvocate_auth.utils import get_utc_now_with_timezone, json_date_serializer
 import datetime
+import redis
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
     
-import redis
 
 class RedisStore(object):
     
@@ -41,23 +41,18 @@ class RedisSessionEngine(object):
         r = RedisStore(settings=self.settings).get_redis_session_connection()
         raw = r.get(session.session_key)
         if raw is None:
-            print 'raw was none'
+            r.delete(session.session_key)
             session.create()
             return {}
         d = pickle.loads(raw)
         expire_date = d.get('expire_date',datetime.datetime(1980,1,1))
         if expire_date <  get_utc_now_with_timezone():
-            print 'expiry date is borked'
             session.create()
             return {}
         try:
-            print 'raw is being decoded'
-            print session.session_key
             decoded = session.decode(d.get('session_data'))
-            print decoded
             return decoded
         except SuspiciousOperation:
-            'print his suspicious op'
             session.create()
             return {}
 
@@ -71,15 +66,19 @@ class RedisSessionEngine(object):
         session._session_key = session._get_new_session_key()
         session.modified = True
         session._session_cache = {}
+        expiry = self.settings.SESSION_COOKIE_AGE
+        expiry_date = get_utc_now_with_timezone() + datetime.timedelta(seconds=expiry)
+        session.save(expiry_date=expiry_date)
         return
 
-    def save(self, session, must_create=False):
+    def save(self, session, must_create=False, expiry_date=None):
         """
         Saves the current session data to redis. If 'must_create' is
         True, a database error will be raised if the saving operation doesn't
         create a *new* entry (as opposed to possibly updating an existing
         entry).
         """
+        
         r = RedisStore(settings=self.settings).get_redis_session_connection()
         session_key = session._get_or_create_session_key()
         
@@ -87,9 +86,12 @@ class RedisSessionEngine(object):
             test = r.get(session_key)
             if test is not None:
                 raise CreateError()
+
+        if expiry_date is None:
+            expiry_date = session.get_expiry_date()
             
         session_dict = {'session_key':session_key,
-                        'expire_date': session.get_expiry_date(),
+                        'expire_date': expiry_date,
                         'session_data':session.encode(session._get_session(no_load=must_create))
             }
         session_json = pickle.dumps(session_dict)

@@ -6,6 +6,15 @@ from werkzeug.http import cookie_date
 import datetime
 import time
 
+class WSGICookie(Cookie):
+    
+    def output(self, attrs=None, header="Set-Cookie:", sep="\015\012"):
+        output = Cookie.output(self, attrs=attrs, header=None, sep=sep)
+        print output
+        if output.startswith("Set-Cookie:"):
+            output = output[11:]
+        print output
+        return output
 
 def me_want_cookie(key, value='', max_age=None, expires=None, path='/',
                    domain=None, secure=False, httponly=False):
@@ -51,19 +60,15 @@ class SessionMiddleware(object):
         self.registry = store_registry
         
     def __call__(self, environ, start_response):
-        print 'in call'
+        # just make sure it exists and throw it in the environ
         session = Session(environ)
         if session.session_key is None:
             session.create()
-            environ[self.settings.SESSION_WSGI_ENVIRON_NAME] = session.session_key
-        self.registry.sessions[session.session_key] = session
+        environ[self.settings.SESSION_WSGI_ENVIRON_NAME] = session
         
         def session_start_response(status, headers, exc_info=None):
-            print 'in start response'
             session = Session(environ)
-            print session
-            print session.keys() 
-            if session.accessed:
+            if session.modified:
                 session.save()
                 if session.get_expire_at_browser_close():
                     max_age = None
@@ -72,14 +77,14 @@ class SessionMiddleware(object):
                     max_age = session.get_expiry_age()
                     expires_time = time.time() + max_age
                     expires = cookie_date(expires_time)
-                cookie = me_want_cookie(self.settings.SESSION_WSGI_ENVIRON_NAME, 
+                cookie = me_want_cookie('sessionid', 
                                         value = session.session_key, 
                                         max_age = max_age, expires = expires, 
                                         path = self.settings.SESSION_COOKIE_PATH, 
                                         domain = self.settings.SESSION_COOKIE_DOMAIN, 
                                         secure = self.settings.SESSION_COOKIE_SECURE, 
                                         httponly = self.settings.SESSION_COOKIE_HTTPONLY)
-                headers.append((self.settings.SESSION_COOKIE_NAME, cookie))
+                headers.append(("Set-Cookie",cookie.output(header='')))
             return start_response(status, headers, exc_info)
         
         return self.app(environ, session_start_response)

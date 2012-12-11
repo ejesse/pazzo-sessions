@@ -22,7 +22,7 @@ class CreateError(Exception):
 class SimpleSession(object):
     
     def __init__(self):
-        self.session_key = None
+        self._session_key = None
         self.session_data = None
         self.expire_date = None
 
@@ -46,25 +46,36 @@ class BaseSession(object):
         self._get_session()
 
     def __contains__(self, key):
+        self.load()
         return key in self._session
 
     def __getitem__(self, key):
+        self.load()
         return self._session[key]
 
     def __setitem__(self, key, value):
+        self.load()
         self._session[key] = value
+        self.save()
         self.modified = True
 
     def __delitem__(self, key):
+        self.load()
         del self._session[key]
         self.modified = True
+        self.save()
 
     def get(self, key, default=None):
+        self.load()
         return self._session.get(key, default)
 
     def pop(self, key, *args):
+        self.load()
         self.modified = self.modified or key in self._session
-        return self._session.pop(key, *args)
+        value = self._session.pop(key, *args)
+        if value is not None:
+            self.save()
+        return value
 
     def setdefault(self, key, value):
         if key in self._session:
@@ -84,7 +95,7 @@ class BaseSession(object):
         del self[self.TEST_COOKIE_NAME]
 
     def _hash(self, value):
-        key_salt = "addvocate_auth.sessions." + self.__class__.__name__
+        key_salt = self.settings.SESSION_KEY_SALT
         return salted_hmac(key_salt, value, self.settings.SECRET_SESSION_KEY).hexdigest()
 
     def encode(self, session_dict):
@@ -164,7 +175,7 @@ class BaseSession(object):
         try:
             return self._session_cache
         except AttributeError:
-            if self.session_key is None or no_load:
+            if self._session_key is None or no_load:
                 self._session_cache = {}
             else:
                 self._session_cache = self.load()
@@ -242,7 +253,7 @@ class BaseSession(object):
         Creates a new session key, whilst retaining the current session data.
         """
         data = self._session_cache
-        key = self.session_key
+        key = self._session_key
         self.create()
         self._session_cache = data
         self.delete(key)
@@ -261,17 +272,18 @@ class BaseSession(object):
         a unique key and will have saved the result once (with empty data)
         before the method returns.
         """
+        self.modified=True
         return self.session_engine.create(self)
 
-    def save(self, must_create=False):
+    def save(self, must_create=False, expiry_date=None):
         """
         Saves the session data. If 'must_create' is True, a new session object
         is created (otherwise a CreateError exception is raised). Otherwise,
         save() can update an existing object with the same key.
         """
-        self.session_engine.save(self, must_create)
+        self.session_engine.save(self, must_create, expiry_date)
         registry = StoreRegistry()
-        registry.sessions[self.session_key] = self
+        registry.sessions[self._session_key] = self
 
     def delete(self, session_key=None):
         """
@@ -279,9 +291,9 @@ class BaseSession(object):
         current session key value is used.
         """
         if session_key is None:
-            if self.session_key is None:
+            if self._session_key is None:
                 return
-            session_key = self.session_key
+            session_key = self._session_key
 
         self.session_engine.delete(session_key)
 
