@@ -96,6 +96,7 @@ class RedisSessionEngine(object):
             }
         session_json = pickle.dumps(session_dict)
         r.set(session_key,session_json)
+        r.expire(session_key, session.get_expiry_age())
         
 
     def delete(self, session_key):
