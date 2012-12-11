@@ -19,13 +19,6 @@ class CreateError(Exception):
     """
     pass
 
-class SimpleSession(object):
-    
-    def __init__(self):
-        self._session_key = None
-        self.session_data = None
-        self.expire_date = None
-
 class BaseSession(object):
     """
     Base class for all Session classes.
@@ -78,9 +71,11 @@ class BaseSession(object):
         return value
 
     def setdefault(self, key, value):
+        self.load()
         if key in self._session:
             return self._session[key]
         else:
+            self.save()
             self.modified = True
             self._session[key] = value
             return value
@@ -122,26 +117,34 @@ class BaseSession(object):
     def update(self, dict_):
         self._session.update(dict_)
         self.modified = True
+        self.save()
 
     def has_key(self, key):
+        self.load()
         return key in self._session
 
     def keys(self):
+        self.load()
         return self._session.keys()
 
     def values(self):
+        self.load()
         return self._session.values()
 
     def items(self):
+        self.load()
         return self._session.items()
 
     def iterkeys(self):
+        self.load()
         return self._session.iterkeys()
 
     def itervalues(self):
+        self.load()
         return self._session.itervalues()
 
     def iteritems(self):
+        self.load()
         return self._session.iteritems()
 
     def clear(self):
@@ -151,6 +154,7 @@ class BaseSession(object):
         self._session_cache = {}
         self.accessed = True
         self.modified = True
+        self.save()
 
     def _get_new_session_key(self):
         "Returns session key that isn't being used."

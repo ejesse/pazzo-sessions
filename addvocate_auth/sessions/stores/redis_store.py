@@ -1,6 +1,6 @@
 from addvocate_auth.exceptions import SuspiciousOperation, \
     AddvocateAuthException
-from addvocate_auth.sessions.base import CreateError, SimpleSession
+from addvocate_auth.sessions.base import CreateError
 from addvocate_auth.utils import get_utc_now_with_timezone, json_date_serializer
 import datetime
 import redis
@@ -23,12 +23,10 @@ class RedisStore(object):
             self.settings = settings
         
     def get_redis_session_connection(self):
+        print 'redis hit'
         if not self.redis_session_pool:
             self.redis_session_pool = redis.ConnectionPool(max_connections=self.settings.REDIS_POOL_MAX_CONNECTIONS,host=self.settings.REDIS_SESSIONS_HOST, port=self.settings.REDIS_SESSIONS_PORT, db=self.settings.REDIS_SESSIONS_DB)
         return redis.Redis(connection_pool=self.redis_session_pool)
-
-class RedisSession(SimpleSession):
-    pass
 
 class RedisSessionEngine(object):
     
