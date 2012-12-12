@@ -2,17 +2,17 @@ pazzo-sessions
 =======================
 Pazzo sessions provides generic, pseudo-synchronized, session storage for Python. The intent is to provide more reliable session storage for applications that have many, near-concurrent requests from the same user/session (think AJAX) and might include different frameworks running concurrently on the same domain (for example, both Django and Flask).
 
-For most web applications, loading a session at the beginning of a request and saving it just before the response is sent to the client is sufficient. If this is all you need, then Pazzo is probably overkill and you should probably look at beaker or your framework's built-in session manaagement (such as Django's)
+For most web applications, loading a session at the beginning of a request and saving it just before the response is sent to the client is sufficient. If this is all you need, then Pazzo is probably overkill and you should look at beaker or your framework's built-in session management (such as Django's default session storage).
 
-Pazzo is very "noisy" and should only be used with high-performance storage. Currently only redis is implemented, but memcache or other high-performance key/value stores could be used as well.
+Pazzo is very "noisy" in terms of number of reads and writes and, as such, should only be used with high-performance storage. Currently only redis is implemented, but memcache or other high-performance key/value stores could be used as well.
 
-The Session interface itself borrows very heavily from Django's session implementation.
+The Session interface itself is inspired by, and borrows very heavily from, Django's session implementation.
 
 ------------
 Status
 ------------
 
-Very alpha. Expect bugs. Currently only supports redis as a backend
+Very alpha. Expect bugs. Currently only supports redis as a backend.
 
 ------------
 Installation
