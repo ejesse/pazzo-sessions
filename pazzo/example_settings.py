@@ -27,3 +27,6 @@ REDIS_POOL_MAX_CONNECTIONS = 20
 REDIS_SESSIONS_HOST = 'localhost'
 REDIS_SESSIONS_PORT = 6379
 REDIS_SESSIONS_DB = 15
+
+""" Required for Django only """
+SESSION_ENGINE = 'pazzo.sessions.django_session'
