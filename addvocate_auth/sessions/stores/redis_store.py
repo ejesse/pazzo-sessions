@@ -11,7 +11,7 @@ except ImportError:
     
 
 class RedisStore(object):
-    """ Handles redis connection polling
+    """ Handles redis connection pooling
     via singleton
     """
     __shared_state = dict(
