@@ -18,13 +18,13 @@ Very alpha. Expect bugs. Currently only supports redis as a backend
 Installation
 ------------
 
-Clone the repo. Install requirements, if necessary (e.g. pip install -r requirements.txt). Run python setup.py install
+Clone the repo. Install requirements, if necessary (e.g. ``pip install -r requirements.txt``). Run ``python setup.py install``
 
 ------------
 Django configuration
 ------------
 
-1. Add settings to your Django settings.py. These are in example_settings.py or:
+1. Add settings to your Django settings.py. These are in example_settings.py or::
 
 
 	SESSION_COOKIE_AGE = 1209600 # Cookie age in seconds, 1209600 == two weeks 
@@ -44,7 +44,7 @@ Django configuration
 	SESSION_ENGINE = 'pazzo.sessions.django_session'
 	SESSION_SECRET_KEY = 'secret'
 		
-You will need to have a SESSION_SECRET_KEY. This can be your Django SECRET_KEY or be separate. If you run multiple apps, they will all need to have the same SESSION_SECRET_KEY value. To generate a separate value:
+You will need to have a SESSION_SECRET_KEY. This can be your Django SECRET_KEY or be separate. If you run multiple apps, they will all need to have the same SESSION_SECRET_KEY value. To generate a separate value::
 
 	from pazzo.utils import get_secret_string
 	print get_secret_string(64)
@@ -57,7 +57,7 @@ That should be it. You should now be able to use the sessions as if they were re
 WSGI configuration
 ------------
 
-1. If you're using a WSGI micro framework like Flask or Bottle, the setup is slightly more complex than for Django. You will still need a settings module. This can be called settings.py or session_settings.py or whatever as long as it has the following attributes:
+1. If you're using a WSGI micro framework like Flask or Bottle, the setup is slightly more complex than for Django. You will still need a settings module. This can be called settings.py or session_settings.py or whatever as long as it has the following attributes::
 
 	SESSION_COOKIE_AGE = 1209600 # Cookie age in seconds, 1209600 == two weeks 
 	SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -75,14 +75,14 @@ WSGI configuration
 	REDIS_SESSIONS_DB = 15
 	SESSION_SECRET_KEY = 'secret'
 	
-You will need to have a SESSION_SECRET_KEY. If you run multiple apps, they will all need to have the same SESSION_SECRET_KEY value. To generate a value:
+You will need to have a SESSION_SECRET_KEY. If you run multiple apps, they will all need to have the same SESSION_SECRET_KEY value. To generate a value::
 
 	from pazzo.utils import get_secret_string
 	print get_secret_string(64)
 
 Copy that output to be the value of the SESSION_SECRET_KEY.
 
-2. The session middleware will need to be configured. If you have an app object inside app.py, you can do:
+2. The session middleware will need to be configured. If you have an app object inside app.py, you can do::
 
 	import settings
 	from app import app
@@ -94,7 +94,7 @@ Copy that output to be the value of the SESSION_SECRET_KEY.
     	app.wsgi_app = SessionMiddleware(app.wsgi_app)
     	app.run(debug=True)
 
-3. To access the session, pass in the WSGI environ:
+3. To access the session, pass in the WSGI environ::
 
 	from pazzo.sessions.wsgi_session import Session
 	from flask import Flask, request, redirect
