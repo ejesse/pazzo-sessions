@@ -1,12 +1,10 @@
-import base64
-import time
-import base64
-
-import OpenSSL
-from datetime import datetime, timedelta
-from addvocate_auth.utils import constant_time_compare, salted_hmac, get_utc_now_with_timezone
-from addvocate_auth.exceptions import SuspiciousOperation, AddvocateAuthException
+from addvocate_auth.exceptions import SuspiciousOperation, \
+    AddvocateAuthException
 from addvocate_auth.sessions.stores.store_registry import StoreRegistry
+from addvocate_auth.utils import constant_time_compare, salted_hmac, \
+    get_utc_now_with_timezone, get_secret_string
+from datetime import datetime, timedelta
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -158,7 +156,7 @@ class BaseSession(object):
 
     def _get_new_session_key(self):
         "Returns session key that isn't being used."
-        return base64.b64encode(OpenSSL.rand.bytes(64))
+        return get_secret_string(64)
 
     def _get_or_create_session_key(self):
         if self._session_key is None:

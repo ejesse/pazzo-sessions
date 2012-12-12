@@ -1,8 +1,12 @@
+import OpenSSL
+import base64
+import datetime
 import hashlib
 import hmac
-import datetime
 import pytz
 
+def get_secret_string(num_bytes):
+    return base64.b64encode(OpenSSL.rand.bytes(num_bytes))
 
 def constant_time_compare(val1, val2):
     """
