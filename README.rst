@@ -9,6 +9,12 @@ Pazzo is very "noisy" in terms of number of reads and writes and, as such, shoul
 The Session interface itself is inspired by, and borrows very heavily from, Django's session implementation.
 
 ------------
+Usage notes
+------------
+
+With Pazzo, every time you access session data, you are hitting the persistence store, at least once. Every. Single. Time. This has serious load implications if you make heavy use of session data and is why Pazzo is only intended to be used by stores such as redis or memcache.
+
+------------
 Status
 ------------
 
