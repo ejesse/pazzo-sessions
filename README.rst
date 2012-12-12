@@ -24,10 +24,12 @@ Clone the repo. Install requirements, if necessary (e.g. ``pip install -r requir
 Django configuration
 ------------
 
-1. Add settings to your Django settings.py. All possible settings are in example_settings.py but the two required settings are::
+1. Add the following to your Django settings.py. All possible settings are in example_settings.py but the two required Django settings are::
 
 	SESSION_ENGINE = 'pazzo.sessions.django_session'
 	SESSION_SECRET_KEY = 'secret'
+		
+Note that your SESSION_ENGINE might already be set! Replace its value with 'pazzo.sessions.django_session' to use Pazzo.
 		
 2. You will need to have a unique SESSION_SECRET_KEY. This can be set to your Django SECRET_KEY or be separate. If you run multiple apps, they will all need to have the same SESSION_SECRET_KEY value. To generate a separate value::
 
