@@ -105,9 +105,9 @@ Copy that output to be the value of the SESSION_SECRET_KEY.
 	def hello_world():
 	    start = time.time()
 	    session = Session(request.environ)
-		session['foo'] = bar
-		## do more stuff
-		return 'hello world'
+	    session['foo'] = bar
+	    ## do more stuff
+	    return 'hello world'
 
 
 4. That's it
