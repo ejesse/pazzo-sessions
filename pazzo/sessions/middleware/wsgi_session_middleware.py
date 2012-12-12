@@ -1,7 +1,7 @@
 from Cookie import Cookie
-from addvocate_auth.exceptions import AddvocateAuthException
-from addvocate_auth.sessions.stores.store_registry import StoreRegistry
-from addvocate_auth.sessions.wsgi_session import Session
+from pazzo.exceptions import PazzoException
+from pazzo.sessions.stores.store_registry import StoreRegistry
+from pazzo.sessions.wsgi_session import Session
 from werkzeug.http import cookie_date
 import time
 
@@ -43,7 +43,7 @@ class SessionMiddleware(object):
     def __init__(self, app):
         store_registry = StoreRegistry()
         if not store_registry.initialized:
-            raise AddvocateAuthException("Session store registry not initialized")
+            raise PazzoException("Session store registry not initialized")
         self.settings = store_registry.settings
         self.app = app
         self.registry = store_registry

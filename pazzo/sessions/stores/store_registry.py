@@ -1,4 +1,4 @@
-from addvocate_auth.exceptions import AddvocateAuthException
+from pazzo.exceptions import PazzoException
 from importlib import import_module
 
 
@@ -21,12 +21,12 @@ class StoreRegistry(object):
             if settings is not None:
                 self.settings = settings
             if self.settings is not None:
-                session_module = import_module(settings.ADDVOCATE_SESSION_STORE)
+                session_module = import_module(settings.PAZZO_SESSION_STORE)
                 self.session_engine = session_module.SessionEngine(settings=self.settings)
         if self.session_engine is not None and self.settings is not None:
             self.initialized=True
             
     def get_session_store(self):
         if not self.initialized:
-            raise AddvocateAuthException("Session registry is not initialized. Call with StoreRegistry(settings=settings)")
+            raise PazzoException("Session registry is not initialized. Call with StoreRegistry(settings=settings)")
         return self.session_engine

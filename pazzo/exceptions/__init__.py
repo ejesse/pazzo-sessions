@@ -1,7 +1,7 @@
 
 
-class AddvocateAuthException(Exception):
-    """Generic, picklable exception for Addvocate Auth"""
+class PazzoException(Exception):
+    """Generic, picklable exception for Pazzo"""
     def __init__(self, value):
         self.value = value
         self.message = value
@@ -9,6 +9,6 @@ class AddvocateAuthException(Exception):
     def __str__(self):
         return repr(self.value)
     
-class SuspiciousOperation(AddvocateAuthException):
+class SuspiciousOperation(PazzoException):
     "The user did something suspicious"
     pass

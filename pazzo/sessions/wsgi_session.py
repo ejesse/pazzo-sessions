@@ -1,6 +1,6 @@
 from Cookie import Cookie
-from addvocate_auth.sessions.base import BaseSession
-from addvocate_auth.sessions.stores.store_registry import StoreRegistry
+from pazzo.sessions.base import BaseSession
+from pazzo.sessions.stores.store_registry import StoreRegistry
 
 def get_session_id_from_environ(environ, settings):
     """ Examines provided WSGI environ and settings

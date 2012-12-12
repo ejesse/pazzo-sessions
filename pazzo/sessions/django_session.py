@@ -1,25 +1,25 @@
-from addvocate_auth.sessions.base import BaseSession
+from pazzo.sessions.base import BaseSession
 from importlib import import_module
-from addvocate_auth.sessions.stores.store_registry import StoreRegistry
-from addvocate_auth.exceptions import AddvocateAuthException
+from pazzo.sessions.stores.store_registry import StoreRegistry
+from pazzo.exceptions import PazzoException
 
 try:
     from django.conf import settings
 except ImportError:
-    raise AddvocateAuthException("Django SessionStore requires Django")
+    raise PazzoException("Django SessionStore requires Django")
 
 
 class SessionStore(BaseSession):
     
     """
-    Gets the addvocate session store from the settings and
+    Gets the pazzo session store from the settings and
     then impersonates a Django store
     """
     
     def __init__(self, session_key=None):
         """ Sneakily set the settings from the Django settings
         so we can fool Django into initializing the registry
-        and still behave like both an addvocate session
+        and still behave like both an pazzo session
         and a Django SessionStore 
         """
         registry = StoreRegistry()

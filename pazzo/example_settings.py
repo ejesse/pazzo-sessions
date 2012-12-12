@@ -7,13 +7,13 @@ SESSION_COOKIE_DOMAIN = '127.0.0.1'
 SESSION_COOKIE_PATH = '/'
 SESSION_COOKIE_SECURE = None
 SESSION_COOKIE_HTTPONLY = None
-SESSION_WSGI_ENVIRON_NAME = 'addvocate_session'
-SESSION_KEY_SALT = "addvocate_auth.sessions.base.BaseSession"
+SESSION_WSGI_ENVIRON_NAME = 'pazzo_session'
+SESSION_KEY_SALT = "pazzo.sessions.base.BaseSession"
 
 """
 Generate a secret key (You can use different number than 64):
 
-from addvocate_auth.utils import get_secret_string
+from pazzo.utils import get_secret_string
 print get_secret_string(64)
 
 Copy that output to be the value of the SECRET_SESSION_KEY
@@ -22,7 +22,7 @@ Copy that output to be the value of the SECRET_SESSION_KEY
 SECRET_SESSION_KEY = 'secret'
 
 """ Persistence settings"""
-ADDVOCATE_SESSION_STORE = 'addvocate_auth.sessions.stores.redis_store'
+PAZZO_SESSION_STORE = 'pazzo.sessions.stores.redis_store'
 REDIS_POOL_MAX_CONNECTIONS = 20
 REDIS_SESSIONS_HOST = 'localhost'
 REDIS_SESSIONS_PORT = 6379

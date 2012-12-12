@@ -1,7 +1,7 @@
-from addvocate_auth.exceptions import SuspiciousOperation, \
-    AddvocateAuthException
-from addvocate_auth.sessions.base import CreateError
-from addvocate_auth.utils import get_utc_now_with_timezone
+from pazzo.exceptions import SuspiciousOperation, \
+    PazzoException
+from pazzo.sessions.base import CreateError
+from pazzo.utils import get_utc_now_with_timezone
 import datetime
 import redis
 try:
@@ -36,7 +36,7 @@ class RedisSessionEngine(object):
     def __init__(self,settings=None):
         self.settings = settings
         if self.settings is None:
-            raise AddvocateAuthException("RedisSessionEngine requires settings")
+            raise PazzoException("RedisSessionEngine requires settings")
         
     def load(self, session):
         """ Loads the data for the provided session 
