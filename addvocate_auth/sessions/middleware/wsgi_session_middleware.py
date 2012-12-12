@@ -58,7 +58,6 @@ class SessionMiddleware(object):
         def session_start_response(status, headers, exc_info=None):
             session = Session(environ)
             if session.modified:
-                session.save()
                 if session.get_expire_at_browser_close():
                     max_age = None
                     expires = None
