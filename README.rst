@@ -51,7 +51,7 @@ You will need to have a SESSION_SECRET_KEY. This can be your Django SECRET_KEY o
 
 Copy that output to be the value of the SESSION_SECRET_KEY.
 
-That should be it. You should now be able to use the sessions as if they were regular old Django sessions (note: you still have run the ).
+That should be it. You should now be able to use the sessions as if they were regular old Django sessions (note: you still have run have ``django.contrib.sessions.middleware.SessionMiddleware`` in your MIDDLEWARE_CLASSE ).
 
 ------------
 WSGI configuration
