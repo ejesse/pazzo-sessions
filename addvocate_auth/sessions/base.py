@@ -4,6 +4,7 @@ from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 from addvocate_auth.utils import constant_time_compare, salted_hmac, \
     get_utc_now_with_timezone, get_secret_string
 from datetime import datetime, timedelta
+import base64
 
 try:
     import cPickle as pickle

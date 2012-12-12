@@ -111,3 +111,6 @@ class RedisSessionEngine(object):
         """ Deletes the session with the associated session_key """
         r = RedisStore(settings=self.settings).get_redis_session_connection()
         r.delete(session_key)
+        
+class SessionEngine(RedisSessionEngine):
+    pass
