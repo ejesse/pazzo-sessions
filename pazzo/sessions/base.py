@@ -90,7 +90,7 @@ class BaseSession(object):
 
     def _hash(self, value):
         key_salt = self.settings.SESSION_KEY_SALT
-        return salted_hmac(key_salt, value, self.settings.SECRET_SESSION_KEY).hexdigest()
+        return salted_hmac(key_salt, value, self.settings.SESSION_SECRET_KEY).hexdigest()
 
     def encode(self, session_dict):
         "Returns the given session dictionary pickled and encoded as a string."

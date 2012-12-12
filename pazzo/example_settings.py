@@ -16,10 +16,10 @@ Generate a secret key (You can use different number than 64):
 from pazzo.utils import get_secret_string
 print get_secret_string(64)
 
-Copy that output to be the value of the SECRET_SESSION_KEY
+Copy that output to be the value of the SESSION_SECRET_KEY
 
 """
-SECRET_SESSION_KEY = 'secret'
+SESSION_SECRET_KEY = 'secret'
 
 """ Persistence settings"""
 PAZZO_SESSION_STORE = 'pazzo.sessions.stores.redis_store'
