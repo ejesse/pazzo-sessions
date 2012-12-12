@@ -3,7 +3,12 @@ from addvocate_auth.sessions.base import BaseSession
 from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 
 def get_session_id_from_environ(environ, settings):
-
+    """ Examines provided WSGI environ and settings
+    and extracts the session ID either from the environ
+    or from a cookie.
+    
+    Returns None if no session ID is found
+    """
     session = environ.get(settings.SESSION_WSGI_ENVIRON_NAME)
     if session is not None:
         if session.session_key is not None:
@@ -23,11 +28,15 @@ def get_session_id_from_environ(environ, settings):
     return session_key 
         
 
-class WSGISession(BaseSession):
-    pass
-
 class Session(object):
-    
+    """ The session object wants to be instantiated
+    via a session_key (because of the class' Django
+    roots), but with WSGI it's a cleaner pattern
+    to extract it from the WSGI environ, so we provide
+    the Session class to return a BaseSession instance
+    via a provided environ
+    """
+        
     def __new__(self, environ):
         registry = StoreRegistry()
         settings = registry.settings
@@ -38,20 +47,4 @@ class Session(object):
             if session_key is not None:
                 return BaseSession(session_key=session_key)
         return BaseSession()
-    
-#    def __init__(self, environ):
-#        """ Adapts the base session to load from a WSGI
-#        environ rather than a session_key. A bit
-#        wonky :( 
-#        """
-#        registry = StoreRegistry()
-#        settings = registry.settings
-#        if environ.has_key(settings.SESSION_WSGI_ENVIRON_NAME):
-#            print "found session in environment"
-#            self = environ[settings.SESSION_WSGI_ENVIRON_NAME]
-#        else:
-#            session_key = get_session_id_from_environ(environ, settings)
-#            if session_key is not None:
-#                print "found session_key %s" % session_key
-#            BaseSession.__init__(self, session_key=session_key)
         

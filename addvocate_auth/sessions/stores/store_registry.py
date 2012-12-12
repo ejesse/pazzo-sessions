@@ -4,6 +4,9 @@ from importlib import import_module
 
 
 class StoreRegistry(object):
+    """
+    Singleton that handles settings
+    """
     
     __shared_state = dict(
         session_engine=None,

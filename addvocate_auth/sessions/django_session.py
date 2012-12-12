@@ -1,7 +1,13 @@
-from django.conf import settings
 from addvocate_auth.sessions.base import BaseSession
 from importlib import import_module
 from addvocate_auth.sessions.stores.store_registry import StoreRegistry
+from addvocate_auth.exceptions import AddvocateAuthException
+
+try:
+    from django.conf import settings
+except ImportError:
+    raise AddvocateAuthException("Django SessionStore requires Django")
+
 
 class SessionStore(BaseSession):
     

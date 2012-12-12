@@ -3,18 +3,7 @@ from addvocate_auth.exceptions import AddvocateAuthException
 from addvocate_auth.sessions.stores.store_registry import StoreRegistry
 from addvocate_auth.sessions.wsgi_session import Session
 from werkzeug.http import cookie_date
-import datetime
 import time
-
-class WSGICookie(Cookie):
-    
-    def output(self, attrs=None, header="Set-Cookie:", sep="\015\012"):
-        output = Cookie.output(self, attrs=attrs, header=None, sep=sep)
-        print output
-        if output.startswith("Set-Cookie:"):
-            output = output[11:]
-        print output
-        return output
 
 def me_want_cookie(key, value='', max_age=None, expires=None, path='/',
                    domain=None, secure=False, httponly=False):
@@ -22,7 +11,7 @@ def me_want_cookie(key, value='', max_age=None, expires=None, path='/',
         Sets a cookie.
 
         ``expires`` can be:
-        - a string in the correct format,
+        - a string in the correct format
 
         """
         
