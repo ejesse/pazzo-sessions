@@ -16,6 +16,8 @@ REDIS_POOL_MAX_CONNECTIONS = 20
 REDIS_SESSIONS_HOST = 'localhost'
 REDIS_SESSIONS_PORT = 6379
 REDIS_SESSIONS_DB = 15
+""" URL will always override the other values EXCEPT for DB"""
+REDIS_SESSIONS_URL = "redis://localhost:6379/15"
 REDIS_SESSIONS_PASSWORD = None
 
 """ Required for Django only """
