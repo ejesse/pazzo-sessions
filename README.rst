@@ -46,12 +46,12 @@ Copy that output to be the value of the SESSION_SECRET_KEY.
 
 The default settings will get most people up and running locally, other key settings include::
 
-SESSION_COOKIE_DOMAIN = '127.0.0.1'
-SESSION_COOKIE_PATH = '/'
-REDIS_POOL_MAX_CONNECTIONS = 20
-REDIS_SESSIONS_HOST = 'localhost'
-REDIS_SESSIONS_PORT = 6379
-REDIS_SESSIONS_DB = 15
+	SESSION_COOKIE_DOMAIN = '127.0.0.1'
+	SESSION_COOKIE_PATH = '/'
+	REDIS_POOL_MAX_CONNECTIONS = 20
+	REDIS_SESSIONS_HOST = 'localhost'
+	REDIS_SESSIONS_PORT = 6379
+	REDIS_SESSIONS_DB = 15
 
 3. Ensure that ``django.contrib.sessions.middleware.SessionMiddleware`` is in your MIDDLEWARE_CLASSES setting.
 
@@ -70,12 +70,12 @@ Copy that output to be the value of the SESSION_SECRET_KEY. Additional optional 
 
 The default settings will get most people up and running locally, other key settings include::
 
-SESSION_COOKIE_DOMAIN = '127.0.0.1'
-SESSION_COOKIE_PATH = '/'
-REDIS_POOL_MAX_CONNECTIONS = 20
-REDIS_SESSIONS_HOST = 'localhost'
-REDIS_SESSIONS_PORT = 6379
-REDIS_SESSIONS_DB = 15
+	SESSION_COOKIE_DOMAIN = '127.0.0.1'
+	SESSION_COOKIE_PATH = '/'
+	REDIS_POOL_MAX_CONNECTIONS = 20
+	REDIS_SESSIONS_HOST = 'localhost'
+	REDIS_SESSIONS_PORT = 6379
+	REDIS_SESSIONS_DB = 15
 
 2. The session middleware will need to be configured. If you have an app object inside app.py, you can do::
 
