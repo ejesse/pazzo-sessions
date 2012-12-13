@@ -26,7 +26,7 @@ class RedisStore(object):
         
     def get_redis_session_connection(self):
         if not self.redis_session_pool:
-            self.redis_session_pool = redis.ConnectionPool(max_connections=self.settings.REDIS_POOL_MAX_CONNECTIONS,host=self.settings.REDIS_SESSIONS_HOST, port=self.settings.REDIS_SESSIONS_PORT, db=self.settings.REDIS_SESSIONS_DB)
+            self.redis_session_pool = redis.ConnectionPool(max_connections=self.settings.REDIS_POOL_MAX_CONNECTIONS,host=self.settings.REDIS_SESSIONS_HOST, port=self.settings.REDIS_SESSIONS_PORT, db=self.settings.REDIS_SESSIONS_DB, password=self.settings.REDIS_SESSIONS_PASSWORD)
         return redis.Redis(connection_pool=self.redis_session_pool)
 
 class RedisSessionEngine(object):
