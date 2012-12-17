@@ -41,8 +41,8 @@ def me_want_cookie(key, value='', max_age=None, expires=None, path='/',
 
 class SessionMiddleware(object):
     """ Pazzo session middleware for WSGI apps
-    Handles loading, saving, expiry so app doesn't
-    have to
+    Handles loading, saving, cookie expiry, etc.
+    so app doesn't have to deal with these things
     """
     def __init__(self, app):
         store_registry = StoreRegistry()
