@@ -1,6 +1,6 @@
 """ General cookie settings """
 
-SESSION_COOKIE_AGE = 1209600 # Cookie age in seconds, 1209600 == two weeks 
+SESSION_COOKIE_AGE = 1209600    # Cookie age in seconds, 1209600 == two weeks
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_DOMAIN = '127.0.0.1'

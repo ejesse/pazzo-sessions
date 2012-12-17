@@ -11,12 +11,14 @@ try:
 except ImportError:
     import pickle
 
+
 class CreateError(Exception):
     """
     Used internally as a consistent exception type to catch from save (see the
     docstring for SessionBase.save() for details).
     """
     pass
+
 
 class BaseSession(object):
     """
@@ -90,21 +92,22 @@ class BaseSession(object):
 
     def _hash(self, value):
         key_salt = self.settings.SESSION_KEY_SALT
-        return salted_hmac(key_salt, value, self.settings.SESSION_SECRET_KEY).hexdigest()
+        return salted_hmac(key_salt, value,
+                self.settings.SESSION_SECRET_KEY).hexdigest()
 
     def encode(self, session_dict):
         "Returns the given session dictionary pickled and encoded as a string."
         pickled = pickle.dumps(session_dict)
-        hash = self._hash(pickled)
-        return base64.encodestring(hash + ":" + pickled)
+        session_hash = self._hash(pickled)
+        return base64.encodestring(session_hash + ":" + pickled)
 
     def decode(self, session_data):
         encoded_data = base64.decodestring(session_data)
         try:
             # could produce ValueError if there is no ':'
-            hash, pickled = encoded_data.split(':', 1)
+            session_hash, pickled = encoded_data.split(':', 1)
             expected_hash = self._hash(pickled)
-            if not constant_time_compare(hash, expected_hash):
+            if not constant_time_compare(session_hash, expected_hash):
                 raise SuspiciousOperation("Session data corrupted")
             else:
                 return pickle.loads(pickled)
@@ -275,7 +278,7 @@ class BaseSession(object):
         a unique key and will have saved the result once (with empty data)
         before the method returns.
         """
-        self.modified=True
+        self.modified = True
         return self.session_engine.create(self)
 
     def save(self, must_create=False, expiry_date=None):

@@ -5,8 +5,10 @@ import hashlib
 import hmac
 import pytz
 
+
 def get_secret_string(num_bytes):
     return base64.b64encode(OpenSSL.rand.bytes(num_bytes))
+
 
 def constant_time_compare(val1, val2):
     """
@@ -21,6 +23,7 @@ def constant_time_compare(val1, val2):
         result |= ord(x) ^ ord(y)
     return result == 0
 
+
 def salted_hmac(key_salt, value, secret=None):
     """
     Returns the HMAC-SHA1 of 'value', using a key generated from key_salt and a
@@ -32,8 +35,9 @@ def salted_hmac(key_salt, value, secret=None):
         raise AttributeError("salted_hmac requires a secret= value")
 
     # We need to generate a derived key from our base key.  We can do this by
-    # passing the key_salt and our base key through a pseudo-random function and
-    # SHA1 works nicely.
+    # passing the key_salt and our base key through a pseudo-random function
+    # and SHA1 works nicely.
+
     key = hashlib.sha1((key_salt + secret).encode('utf-8')).digest()
 
     # If len(key_salt + secret) > sha_constructor().block_size, the above
@@ -42,14 +46,16 @@ def salted_hmac(key_salt, value, secret=None):
     # However, we need to ensure that we *always* do this.
     return hmac.new(key, msg=value, digestmod=hashlib.sha1)
 
+
 def get_utc_now_with_timezone():
-    """ Convenience method. Returns a "now" 
-    utc datetime instance with a UTC timezone set 
+    """ Convenience method. Returns a "now"
+    utc datetime instance with a UTC timezone set
     """
     d = datetime.datetime.utcnow()
     tz = pytz.timezone('utc')
     d = d.replace(tzinfo=tz)
     return d
+
 
 def json_date_serializer(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
